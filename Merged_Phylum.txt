@@ -1,0 +1,13 @@
+ID	100UNCULTURED_S7_PE_profile_phylum	14UNCULTURED_S8_PE_profile_phylum	18UNCULTURED_S12_PE_profile_phylum	19UNCULTURED_S14_PE_profile_phylum	24UNCULTURED_S3_PE_profile_phylum	26UNCULTURED_S4_PE_profile_phylum	28UNCULTURED_S6_PE_profile_phylum	2UNCULTURED_S1_PE_profile_phylum	300UNCULTURED_S9_PE_profile_phylum	36UNCULTURED_S10_PE_profile_phylum	400UNCULTURED_S11_PE_profile_phylum	40UNCULTURED_S15_PE_profile_phylum	4UNCULTURED_S2_PE_profile_phylum	500UNCULTURED_S13_PE_profile_phylum	8UNCULTURED_S5_PE_profile_phylum	lucaAR31_S16_PE_profile_phylum	lucaAR32_S17_PE_profile_phylum	lucaAR33_S18_PE_profile_phylum	lucaAR34_S19_PE_profile_phylum
+#SampleID	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis	Metaphlan2_Analysis
+p__Actinobacteria	30.43716	0.04915	0.37861	0.20591	0.18542	0.15702	0.5258	0.17532	34.95446	0.88706	29.52628	0.29386	0.33096	16.50415	0.62983	1.37443	2.95707	9.77331	2.07737
+p__Ascomycota	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.09253	0.10269	0.0942	0.08481
+p__Bacteroidetes	11.85609	1.37755	3.75385	13.67788	9.8056	25.73551	8.25986	12.52003	6.16289	3.05048	18.30381	9.4479	15.79006	29.17665	9.47462	59.10332	44.05631	39.19663	59.94176
+p__Euryarchaeota	7.88409	9.98119	12.00965	8.48471	7.62852	21.61367	0.29402	6.58951	7.68603	16.79133	7.43591	15.90007	35.86596	6.44407	0.37156	0.0	0.0	0.49943	0.0
+p__Firmicutes	43.75554	87.60973	78.12406	73.96506	80.14698	49.88136	87.36112	75.97037	48.36876	74.64251	38.20111	58.40402	44.86775	46.13154	85.34438	37.28183	51.27433	48.06101	36.117
+p__Proteobacteria	5.44851	0.1874	5.70779	0.24798	0.54054	0.0908	3.55919	0.58898	2.66824	4.62862	5.82118	2.06242	2.38746	1.67161	4.17961	0.67939	1.6096	0.92662	1.77794
+p__Spirochaetes	0.30784	0.79499	0.00182	3.41844	1.45399	2.52164	0.0	3.97901	0.02858	0.0	0.32129	13.85424	0.75782	0.04949	0.0	0.0	0.0	0.0	0.0
+p__Synergistetes	0.0	0.0	0.0	0.0	0.23895	0.0	0.0	0.0	0.0	0.0	0.0	0.03749	0.0	0.0	0.0	0.0	0.0	0.0	0.0
+p__Verrucomicrobia	0.31078	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.13104	0.0	0.39042	0.0	0.0	0.02247	0.0	1.4685	0.0	1.44881	0.0
+p__Viruses_noname	0.0	0.0	0.02423	0.0	0.0	0.0	0.0	0.17677	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.00112
+p__unclassified	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
