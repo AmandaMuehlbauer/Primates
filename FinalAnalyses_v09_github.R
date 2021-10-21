@@ -1,4 +1,8 @@
-#This is a curated version of my analyses from primates_RNA_16s_v0X.Rmd
+#This is a curated version of the general DESeq2 analyses. 
+#It includes the script to make Fig. 2
+#Also this is the script for the series of likelihood ratio tests used to classify each gene according to expression pattern
+#
+
 # R version 3.3.3 (2017-03-06)
 # Platform: x86_64-apple-darwin13.4.0 (64-bit)
 # Running under: macOS  10.13.6
@@ -53,18 +57,16 @@ library("pheatmap")
 library("RColorBrewer")
 library("PoiClaClu")
 library("dplyr")
-#library("vsn")
+
 library("AnnotationDbi")
 library("org.Hs.eg.db")
-#source("https://bioconductor.org/biocLite.R")
-#biocLite("goseq")
+
 library("lattice")
 library("hash")
 library("biomaRt")
 library("Cormotif")
 library("UpSetR")
 library("tidyr")
-##install.packages("Hmisc", dependencies=T)
 library("Hmisc")
 library("gplots")
 library("gridExtra")
@@ -188,7 +190,7 @@ data <- subset(data, select = -CP4.HT2 )
 # From the DESeq2 manual: In order to benefit from the default settings of the package, you should put the
 # variable of interest at the end of the formula and make sure the control level is the first level.
 
-#meta$Species_All <- ifelse(meta$Species_All=="Primate",1,0)
+
 
 dds_all <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ ExperimentPlate + Species_All)
 dds_all <- dds_all[ rowSums(counts(dds_all)) > 1, ]
@@ -303,19 +305,18 @@ for (cl in 1:length(unique(as.numeric(meta$ExperimentPlate)))) {
     nm1[,as.numeric(meta$ExperimentPlate)==cl] - avg
 }
 
-#nm1 <-test4[,ge1]
-#nm1<- t(nm1)
+
 nm2 <- nm1[,1:19]
 
 
 colnames(nm2) <- c("Gorilla 1", "Gorilla 2", "Gorilla 3", "Gorilla 4", "Gorilla 5",   "Orangutan 1", "Orangutan 2", "Orangutan 3","Orangutan 4","Gorilla 6", "Chimp 1", "Chimp 2", "Chimp 3", "Gorilla 7", "Chimp 4", "Human 1", "Human 2", "Human 3", "Human 4" )
 
 nm3 <- nm2[ ,order(colnames(nm2))]
-#nm3 <-head(nm3)
+
 nm3 <- data.matrix(nm3)
 
 
-#colors = c(seq(-3,-1,length=100),seq(-1,0,length=100),seq(0,0,length=100),seq(0,1,length=100),seq(1,3,length=100))
+
 my_palette <- colorRampPalette(c("blue","blue", "white","red", "red"))(n = 299)
 
 
@@ -389,7 +390,7 @@ dir.create(file.path(rootpath, "DE_Model2" ))
 setwd(file.path(rootpath, "DE_Model2"))
 
 write.table(resSig_humancontrol, file = "DE_Human_comparedtoNoMBControl_v09.txt", sep = "\t")
-#write.table(resSig_humancontrol, file = "SupplementalTable21_HumanLFC.txt", sep = "\t")
+
 
 ###################Chimpanzee compared to no microbiome control
 dds_cc <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ ExperimentPlate + Species )
@@ -479,7 +480,7 @@ sum(!is.na(res_gc$pvalue))
 
 
 resSig_gorillacontrol <- subset(res_gc, padj < 0.1)
-#head(resSig_h[ order(resSig_h$log2FoldChange), ])
+
 
 #Number of genes up regulated
 gor_up <- resSig_gorillacontrol[resSig_gorillacontrol$log2FoldChange > 0.25,]
@@ -495,7 +496,7 @@ DE_gorillacontrol <- resSig_gorillacontrol[ order(resSig_gorillacontrol$log2Fold
 
 setwd(file.path(rootpath, "DE_Model2"))
 write.table(resSig_gorillacontrol, file = "DE_Gorilla_comparedtoNoMBControl_v09.txt", sep = "\t")
-#write.table(resSig_gorillacontrol, file = "SupplementalTable23_GorillaLFC.txt", sep = "\t")
+
 
 ####Orangutan compared to no microbiome control
 dds_oc <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ ExperimentPlate + Species)
@@ -536,7 +537,7 @@ sum(!is.na(res_oc$pvalue))
 
 
 resSig_orangutancontrol <- subset(res_oc, padj < 0.1)
-#head(resSig_h[ order(resSig_h$log2FoldChange), ])
+
 
 #Number of genes up regulated
 ora_up <- resSig_orangutancontrol[resSig_orangutancontrol$log2FoldChange >0.25,]
@@ -551,7 +552,7 @@ DE_orangutancontrol <- resSig_orangutancontrol[ order(resSig_orangutancontrol$lo
 
 setwd(file.path(rootpath, "DE_Model2"))
 write.table(resSig_orangutancontrol, file = "DE_Orangutan_comparedtoNoMBControl_v09.txt", sep = "\t")
-#write.table(resSig_orangutancontrol, file = "SupplementalTable24_OrangutanLFC.txt", sep = "\t")
+
 
 ####Write results from model 2 to files
 setwd(file.path(rootpath, "DE_Model2"))
@@ -570,10 +571,6 @@ setwd(file1)
 
 
 
-# res_alltop<-subset(res_alltop,!(is.na(res_alltop["symbol"])))
-# rownames(res_alltop) <- res_alltop$symbol
-# list_genes <- res_alltop$symbol
-
 #########################################################################################
 ###This plots the top upregulated and bottom downregulated genes for Model 1 (treatment vs control)
 
@@ -581,7 +578,7 @@ list_genes <- c(head(rownames(DE_allprimates), 200), tail(rownames(DE_allprimate
 ac1 <- data.frame()
 title <- character()
 p<-list()
-#plots <- list() 
+
 for(a in list_genes)
 {
   
@@ -700,18 +697,6 @@ res_o_d$ENSG <- rownames(res_o_d)
 res_total <-rbind(res_c_d, res_h_d, res_g_d, res_o_d)
 
 rownames(res_total) <- seq(1:nrow(res_total))
-
-#sum(match(rownames(res_c_d), rownames(res_h_d)))
-
-
-# sum(rownames(res_c_d) ==rownames(res_h_d))
-# sum(rownames(res_c_d) ==rownames(res_g_d))
-# sum(rownames(res_c_d) ==rownames(res_o_d))
-
-# res_total <- cbind(res_c_d, res_h_d, res_g_d, res_o_d)
-# res_tot <- res_total[,c(7,8,2,11,20,29)]
-# colnames(res_tot) <- c("symbol", "entrez", "chimp", "human","gorilla","orangutan")
-
 
 
 
@@ -835,17 +820,6 @@ sep2 <- sep2[]
 
 samples <-c("chimp", "gorilla", "human", "orangutan")
 
-# whichGenes <- function(samp,dat) {
-#   padj <- paste0("padj_",samp)
-#   logFC <- paste0("logFC_",samp)
-#   temp <- ifelse(!is.na(dat[padj]),ifelse(dat[padj]<0.1,ifelse(abs(dat[logFC])>0.3,1,0),0),NA)
-#   #temp <- ifelse(!is.na(dat[padj]))
-#   colnames(temp) <- samp
-#   temp
-# }
-
-#aux4 <- lapply(samples,whichGenes,dat=sep2)
-#aux5 <- do.call(cbind,aux4)
 aux6 <- merge(sep2,g_combine, by.x = "ENSG", by.y = "ENSG")
 
 aux6$count <- rowSums(aux6[,c(16:19)],na.rm=TRUE)
@@ -862,53 +836,26 @@ rownames(aux8) <- aux7$ENSG
 
 
 ####Heatmap
-# 
-# n_matrix <- data.matrix(aux8)
-# colors = c(seq(-3,-1,length=100),seq(-1,0,length=100),seq(0,0,length=100),seq(0,1,length=100),seq(1,3,length=100))
-# my_palette <- colorRampPalette(c("blue","white","red"))(n = 299)
-# #plot(rep(1,10),col=my_palette, pch=19,cex=2)
+
 
 dir.create(file.path(rootpath, "Plots"))
 dir.create(file.path(rootpath, "Plots/Model_1"))
 dir.create(file.path(rootpath, "Plots/Model_1/Heatmap"))
 setwd(file.path(rootpath, "/Plots/Model_1/Heatmap"))
-# heatmap.2(n_matrix, scale="none", symm=F,symkey=F,symbreaks=T, trace="none",density.info="none", col=my_palette, dendrogram="both", cexRow=0.5, cexCol = 1, margins = c(5,1), labCol = c("Human", "Gorilla", "Chimp", "Orangutan"))
-# 
-# pdf ("DEheatmap_SpeciesVcontrol_v10.pdf")
-# heatmap.2(n_matrix, scale="none", symm=F,symkey=F,symbreaks=T, trace="none",density.info="none", col=my_palette, dendrogram="both", cexRow=0.5, cexCol = 1, margins = c(5,1), labCol = c("Human", "Gorilla", "Chimp", "Orangutan"))
-# dev.off()
+
 
 n_matrix <- data.matrix(aux8)
 #colors = c(seq(-3,-1,length=100),seq(-1,0,length=100),seq(0,0,length=100),seq(0,1,length=100),seq(1,3,length=100))
 my_palette <- colorRampPalette(c("blue", "white", "red"))(n=299)
-#plot(rep(1,10),col=my_palette, pch=19,cex=2)
+
 n_matrix2 <- as.data.frame(n_matrix)
 n_matrix2$col_n <-"black"
 
-##Before, using we used a different model for the heatmap. 
-##This was to select for genes such that the lfc was >=|0.3| for at least one hominid species
-# n_matrix2$col_n[abs(n_matrix2$logFC_chimp)>0.3 & abs(n_matrix2$logFC_gorilla) <0.3 & abs(n_matrix2$logFC_human )<0.3 & abs(n_matrix2$logFC_orangutan)<0.3] <- "red"
-# 
-# n_matrix2$col_n[abs(n_matrix2$logFC_chimp)<0.3 & abs(n_matrix2$logFC_gorilla) >0.3 & abs(n_matrix2$logFC_human )<0.3 & abs(n_matrix2$logFC_orangutan)<0.3] <- "green"
-# 
-# n_matrix2$col_n[abs(n_matrix2$logFC_chimp)<0.3 & abs(n_matrix2$logFC_gorilla) <0.3 & abs(n_matrix2$logFC_human )>0.3 & abs(n_matrix2$logFC_orangutan)<0.3] <- "blue"
-# 
-# n_matrix2$col_n[abs(n_matrix2$logFC_chimp)<0.3 & abs(n_matrix2$logFC_gorilla) <0.3 & abs(n_matrix2$logFC_human )<0.3 & abs(n_matrix2$logFC_orangutan)>0.3] <- "orange"
 
-# 
-# n_matrix2$col_n[abs(n_matrix2$logFC_chimp)>0.3 & abs(n_matrix2$logFC_gorilla) >0.3 & abs(n_matrix2$logFC_human )>0.3 & abs(n_matrix2$logFC_orangutan)>0.3] <- "grey"
-
-# as.factor(n_matrix2$col_n)
 n_matrix2 <-as.data.frame(n_matrix2)
 n_matrix2 <- n_matrix2[order(n_matrix2[,"col_n"]),]
 
-# goror<- rownames(n_matrix2[order(n_matrix2$logFC_gorilla),])
-# oror<- rownames(n_matrix2[order(n_matrix2$logFC_orangutan),])
-# chor<- rownames(n_matrix2[order(n_matrix2$logFC_chimp),])
-# humor<- rownames(n_matrix2[order(n_matrix2$logFC_human),])
 
-# 
-#n_matrix3 <- data.matrix(n_matrix2[1:4])
 n_matrix3 <- n_matrix[rownames(n_matrix2),]
 
 
@@ -925,12 +872,9 @@ rownames(Modcombine1) <- Modcombine1$ENSG
 
 
 aux <- Modcombine1
-#aux <-aux[,2:5]
-colnames(aux) <- c("ENSG","Chimp", "Gorilla", "Human", "Orangutan")
-# aux <- cbind(aux$ENSG, aux$Human, aux$Orangutan, aux$Gorilla, aux$Chimp)
 
-# colnames(aux) <- c("ENSG","Human", "Orangutan", "Gorilla", "Chimp")
-# aux <-as.data.frame(aux)
+colnames(aux) <- c("ENSG","Chimp", "Gorilla", "Human", "Orangutan")
+
 rownames(aux) <- aux$ENSG
 aux$X1[aux$Human == 1 & aux$Chimp == 0 & aux$Gorilla == 0 & aux$Orangutan == 0] <- 1
 aux$X2[aux$Human == 0 & aux$Chimp == 1 & aux$Gorilla == 0 & aux$Orangutan == 0] <- 1
@@ -973,27 +917,23 @@ colnames(ordertable1) <-c("column", "order")
 ordertable2 <- data.frame(oct, ootsimp)
 colnames(ordertable2) <-c("column", "order")
 
-# 
-# column    order
-# X1    Human
-# X2    Gorilla
 
 
 
 orderrow <- function(col,dat,table) {
-    #print("1")
+  
   dat2 <- dat[dat[col]==1,]
-     #print("2")
+
   species <- table[table$column == col,"order"]
-    #print(species)
+   
   dat2$cat <- paste0(col,"_",species)
   colnames(dat2)[colnames(dat2) == eval(as.symbol("species"))] <- 'example'
   dat3 <- dat2[order(dat2$example),]
   colnames(dat3) <- gsub("example", species, colnames(dat3))
-  # print("4")
-  #dat3
+
+
   print(dat3)
-  #dim(dat3)
+
 }
 auxd <- aux[,c(2:20)]
 auxd <- auxd[c("Human", "Orangutan", "Gorilla", "Chimp", "X1","X2","X3", "X4", "X5", "X6", "X7","X8","X9","X10","X11","X12","X13","X14","X15")]
@@ -1033,7 +973,7 @@ saveRDS(n_matrix4, "n_matrix4.RDS")
 
 
 setwd(file.path(rootpath, "Plots/Model_2"))
-#myBreaks <- seq(-1.5, 1.5, length.out=300)
+
 pdf ("DEheatmap_Reorder_1.v09_.pdf")
 heatmap.2(n_matrix5,
           RowSideColors=as.character(n_matrix4[as.character(unlist(rownames(n_matrix4))),]$col_n), 
@@ -1799,13 +1739,7 @@ dir.create(file.path(rootpath, "Plots/Model_7/Orangutan"))
 ##Make plots for human-chimp combo
 dir.create(file.path(rootpath, "Plots/Model_7/HumanChimp"))
 
-#list_genes <- g_g$best_conf.....filter.conf.....post_gorilla.......select.ensg......unlist
-#list_genes <- g_cgo$best_conf.....filter.conf.....post_chimp_gorilla_orangutan.......select.ensg......unlist
-#list_genes <- g_cgh$best_conf.....filter.conf.....post_human_chimp_gorilla.......select.ensg......unlist
-#list_genes<- g_gho$best_conf.....filter.conf.....post_human_gorilla_orangutan.......select.ensg......unlist
-#list_genes <- gorillalist$ENSG
-#list_genes <- humanlist$ENSG
-#list_genes <- orangutanlist$ENSG
+
 list_genes <- g_h$ENSG
 list_genes <- g_g$ENSG
 list_genes <- g_c$ENSG
@@ -1816,7 +1750,7 @@ list_genes <- g_ch$ENSG
 ac1 <- data.frame()
 title <- character()
 p<-list()
-#plots <- list() 
+
 
 file1 <-file.path(rootpath, "Plots/Model_7/Orangutan/")
 setwd(file1)
@@ -1950,337 +1884,6 @@ ggsave(paste0(file.path(rootpath, "/Plots/Model_7/HumanChimp.pdf")), m1)
 #+
 
 
-
-
-
-##########GWAS enrichment############
-##Test for gwas enrichment for Model6 results. Model 2 is 4 models, species vs control
-
-setwd("~/Google Drive/GWAS_Catalog_2018/")
-library("readr")
-library("AnnotationDbi")
-gwas <- read_tsv("gwas_catalog_v1.0.1-associations_e91_r2018-01-16.tsv")
-
-dir.create(file.path(rootpath, "GWAS"))
-setwd(file.path(rootpath, "GWAS"))
-
-
-###This is to determine GWAS enrichment for genes identified in the LRT model
-#Including non-expressed genes for each species
-library("data.table")
-hall <- as.data.frame(c(g_h$symbol, g_cgo$symbol))
-colnames(hall) <- "symbol"
-call <- as.data.frame(c(g_c$symbol, g_gho$symbol))
-colnames(call) <- "symbol"
-gall <- as.data.frame(c(g_g$symbol, g_cho$symbol))
-colnames(gall) <- "symbol"
-oall <- as.data.frame(c(g_o$symbol, g_cgh$symbol))
-colnames(oall) <- "symbol"
-
-gwas <- subset(gwas, !is.na(MAPPED_GENE))
-
-cgwas2 <- intersect(call$symbol, gwas$MAPPED_GENE)
-cgwas21 <- gwas[gwas$MAPPED_GENE %in% cgwas2,]
-
-ggwas2 <- intersect(gall$symbol, gwas$MAPPED_GENE)
-ggwas21 <- gwas[gwas$MAPPED_GENE %in% ggwas2,]
-
-hgwas2 <- intersect(hall$symbol, gwas$MAPPED_GENE)
-hgwas21 <- gwas[gwas$MAPPED_GENE %in% hgwas2,]
-
-ogwas2 <- intersect(oall$symbol, gwas$MAPPED_GENE)
-ogwas21 <- gwas[gwas$MAPPED_GENE %in% ogwas2,]
-
-hl1 <- c("ileocolitis, Crohn's disease", "inflammatory bowel disease", "Crohn's disease", 
-         "gastric adenocarcinoma", "gastric carcinoma", "type I diabetes mellitus",
-         "obesity", "Parkinson's disease", "gout", "colorectal cancer")
-
-hinterest <- hgwas21[hgwas21$MAPPED_TRAIT %in% hl1,]
-
-p<-ggplot(data=hinterest, aes(x=MAPPED_TRAIT, y=PVALUE_MLOG)) +
-  geom_bar(stat="identity")
-p
-
-
-###Add gene symbols 
-setwd(file.path(rootpath))
-bgall <- read.table("Filtered_Data.txt", sep="\t")
-bgall$symbol <- mapIds(org.Hs.eg.db,
-                       keys=row.names(bgall),
-                       column="SYMBOL",
-                       keytype="ENSEMBL",
-                       multiVals="first")
-bgall$entrez <- mapIds(org.Hs.eg.db,
-                       keys=row.names(bgall),
-                       column="ENTREZID",
-                       keytype="ENSEMBL",
-                       multiVals="first")
-
-bggwas2 <- intersect(bgall$symbol, gwas$MAPPED_GENE)
-bggwas21 <- gwas[gwas$MAPPED_GENE %in% bggwas2,]
-
-
-h1 <- data.frame(c(gwas = (length(hgwas2)), notgwas =(nrow(hall) - length(hgwas2))), 
-                 c(length(bggwas2), nrow(bgall)-length(bggwas2)))
-colnames(h1) <- c("Human", "Background")
-
-
-c1 <- data.frame(c(gwas = (length(cgwas2)), notgwas =(nrow(call) - length(cgwas2))), 
-                 c(length(bggwas2), nrow(bgall)-length(bggwas2)))
-colnames(c1) <- c("Chimp", "Background")               
-
-g1 <- data.frame(c(gwas = (length(ggwas2)), notgwas =(nrow(gall) - length(ggwas2))),
-                 c(length(bggwas2), nrow(bgall)-length(bggwas2)))
-colnames(g1) <- c("Gorilla", "Background") 
-
-
-o1 <- data.frame(c(gwas = (length(ogwas2)), notgwas =(nrow(oall) - length(ogwas2))),
-                 c(length(bggwas2), nrow(bgall)-length(bggwas2)))
-colnames(o1) <- c("Orangutan", "Background") 
-
-###Run fisher tests to determine enrichment
-fisher.test(h1, alternative = "greater")
-# Fisher's Exact Test for Count Data
-# 
-# data:  h1
-# p-value = 8.962e-09
-# alternative hypothesis: true odds ratio is greater than 1
-# 95 percent confidence interval:
-#  1.250746      Inf
-# sample estimates:
-# odds ratio 
-#   1.372531 
-
-fisher.test(c1, alternative = "greater")
-# Fisher's Exact Test for Count Data
-# 
-# data:  c1
-# p-value = 0.0002849
-# alternative hypothesis: true odds ratio is greater than 1
-# 95 percent confidence interval:
-#  1.11152     Inf
-# sample estimates:
-# odds ratio 
-#   1.225317 
-
-fisher.test(g1, alternative = "greater")
-# Fisher's Exact Test for Count Data
-# 
-# data:  g1
-# p-value = 1.28e-12
-# alternative hypothesis: true odds ratio is greater than 1
-# 95 percent confidence interval:
-#  1.235679      Inf
-# sample estimates:
-# odds ratio 
-#   1.319059 
-
-fisher.test(o1, alternative = "greater")
-# Fisher's Exact Test for Count Data
-# 
-# data:  o1
-# p-value = 0.0009011
-# alternative hypothesis: true odds ratio is greater than 1
-# 95 percent confidence interval:
-#  1.090195      Inf
-# sample estimates:
-# odds ratio 
-#   1.201355 
-
-
-#########################
-
-setwd("~/Google Drive/Primates_Coculture/Primates/MyAnalysis/Results_v08/LRT/")
-read.table()
-
-
-# get genes that are exclusively associated with a bunch of diseases from gwas catalog
-##Crohn's disease
-#subset the GWAS database
-crohntrait <- c("Crohn's disease", "perianal Crohn's disease" )
-crohns <- gwas[gwas$MAPPED_TRAIT %in% crohntrait,]
-
-ibdtrait <- c("inflammatory bowel disease" )
-ibd <- gwas[gwas$MAPPED_TRAIT %in% ibdtrait,]
-
-colorectalcancertrait <- c("colorectal cancer")
-colorectalcancer <- gwas[gwas$MAPPED_TRAIT %in% colorectalcancertrait,]
-
-uctrait<- c ("ulcerative colitis")
-uc <- gwas[gwas$MAPPED_TRAIT %in%  uctrait,]
-
-typeitrait <- c("type I diabetes mellitus")
-typei <- gwas[gwas$MAPPED_TRAIT %in% typeitrait,]
-
-typeiitrait <- c("type II diabetes mellitus")
-typeii <- gwas[gwas$MAPPED_TRAIT %in% typeiitrait,]
-
-crptrait <- c("C-reactive protein measurement")
-crp <- gwas[gwas$MAPPED_TRAIT %in% crptrait,]
-
-cdd <- gwas[gwas$MAPPED_TRAIT %in% "inflammatory response",]
-
-bmitrait <- c("body mass index")
-bmi <- gwas[gwas$MAPPED_TRAIT %in% bmitrait,]
-
-choltrait <- c("total cholesterol measurement")
-chol <- gwas[gwas$MAPPED_TRAIT %in% choltrait,]
-
-alstrait <- c("sporadic amyotrophic lateral sclerosis")
-als <- gwas[gwas$MAPPED_TRAIT %in% alstrait,]
-
-igg <-gwas[gwas$MAPPED_TRAIT %in%"serum IgG glycosylation measurement" ,] 
-
-schizophrenia <- gwas[gwas$MAPPED_TRAIT %in%"schizophrenia" ,] 
-
-bc <-  gwas[gwas$MAPPED_TRAIT %in%"breast carcinoma" ,] 
-
-#make a list of dataframes for specific gwas traits
-gtrait <- list(crohns, ibd, colorectalcancer, uc, typei, typeii, crp, bmi, chol, als, igg, schizophrenia, bc)
-
-
-trait <- c("type I diabetes mellitus","C-reactive protein measurement" ,  "Crohn's disease", "inflammatory bowel disease" ,
-           "ulcerative colitis" , "inflammatory response", "type II diabetes mellitus, autoantibody measurement","type II diabetes mellitus, metabolic syndrome" ,
-           "psoriasis, Crohn's disease" , "ulcerative colitis, Crohn's disease" , "gout", "type II diabetes mellitus, obesity", 
-           "stricture, Crohn's disease, complicated disease course","erythema nodosum, Crohn's disease", "ileocolitis, Crohn's disease",                                                                                                                                                                                                                                                                                                                  
-           "Crohn's disease, mild disease course", "perianal Crohn's disease, complicated disease course",                                                                                                                                                                                                                                                                                             
-           "perianal Crohn's disease","colorectal cancer, microsatellite instability measurement, overall survival",                                                                                                                                                                                                                                                                 
-"colorectal cancer, microsatellite instability measurement", "Crohn's disease, disease prognosis measurement" 
-)
-
-
-###Cycle through this list of diseases
-
-nm <- c("Crohn's disease", "Inflammatory bowel disease", "Colorectal cancer", "Ulcerative colitis", 
-        "Type I diabetes", "Type II diabetes", "C-reactive protein", "Body mass index", "Total Cholesterol Measurement", "ALS", "IGG", "Schi", "Breast carcinoma")
-
-hp <- vector()
-cp <- vector()
-gp <- vector()
-op <- vector()
-
-for(i in 1:length(gtrait))
-{
-  #First get the background genes
-  bggwas2 <- intersect(bgall$symbol, gtrait[[i]]$MAPPED_GENE)
-  bggwas21 <- gtrait[[i]][gtrait[[i]]$MAPPED_GENE %in% bggwas2,]
-  
-  #human enrichment
-  hgwas2 <- intersect(hall$symbol, gtrait[[i]]$MAPPED_GENE)
-  hgwas21 <- gtrait[[i]][gtrait[[i]]$MAPPED_GENE %in% hgwas2,]
-  
-
-  print(length(unique(hgwas21$MAPPED_GENE)))
-  print(length(unique(bggwas21$MAPPED_GENE)))
-  
-  h1 <- data.frame(c(gwas = (length(hgwas2)), notgwas =(nrow(hall) - length(hgwas2))), 
-                   c(length(bggwas2), nrow(bgall)-length(bggwas2)))
-  colnames(h1) <- c("Human", "Background")
-  htest <- fisher.test(h1, alternative = "greater")
-  hp <- c(hp, htest$p.value)
-  print(h1)
-  
-  
-  #chimp enrichment
-  cgwas2 <- intersect(call$symbol, gtrait[[i]]$MAPPED_GENE)
-  cgwas21 <- gtrait[[i]][gtrait[[i]]$MAPPED_GENE %in% cgwas2,]
-  
-  c1 <- data.frame(c(gwas = (length(cgwas2)), notgwas =(nrow(call) - length(cgwas2))), 
-                   c(length(bggwas2), nrow(bgall)-length(bggwas2)))
-  colnames(c1) <- c("Chimp", "Background")          
-  ctest <- fisher.test(c1)
-  cp <- c(cp, ctest$p.value)
-  
-  print(c1)
-  #gorilla enrichment
-  ggwas2 <- intersect(gall$symbol, gtrait[[i]]$MAPPED_GENE)
-  ggwas21 <- gtrait[[i]][gtrait[[i]]$MAPPED_GENE %in% ggwas2,]
-  
-  g1 <- data.frame(c(gwas = (length(ggwas2)), notgwas =(nrow(gall) - length(ggwas2))),
-                   c(length(bggwas2), nrow(bgall)-length(bggwas2)))
-  colnames(g1) <- c("Gorilla", "Background") 
-  gtest <- fisher.test(g1)
-  gp <- c(gp, gtest$p.value)
-  
-  print(g1)
-  #orangutan enrichment
-  ogwas2 <- intersect(oall$symbol, gtrait[[i]]$MAPPED_GENE)
-  ogwas21 <- gtrait[[i]][gtrait[[i]]$MAPPED_GENE %in% ogwas2,]
-  
-  o1 <- data.frame(c(gwas = (length(ogwas2)), notgwas =(nrow(oall) - length(ogwas2))),
-                   c(length(bggwas2), nrow(bgall)-length(bggwas2)))
-  colnames(o1) <- c("Orangutan", "Background") 
-  otest <- fisher.test(o1)
-  op <- c(op, otest$p.value)
-  
-  print(o1)
-}
-
-h2 <- as.data.frame(cbind(nm, hp))
-h2$hp <- as.numeric(as.character(h2$hp))
-colnames(h2) <- c("Trait", "P-value")
-
-c2 <- as.data.frame(cbind(nm, cp))
-c2$cp <- as.numeric(as.character(c2$cp))
-colnames(c2) <- c("Trait", "P-value")
-
-g2 <- as.data.frame(cbind(nm, gp))
-g2$gp <- as.numeric(as.character(g2$gp))
-colnames(g2) <- c("Trait", "P-value")
-
-o2 <- as.data.frame(cbind(nm, op))
-o2$op <- as.numeric(as.character(o2$op))
-colnames(o2) <- c("Trait", "P-value")
-
-h2$Species <- "Human"
-c2$Species <- "Chimp"
-g2$Species <- "Gorilla"
-o2$Species <- "Orangutan"
-
-h2$Color <- "#00BFC4"
-c2$Color <- "#F8766D"
-g2$Color <- "#7CAE00"
-o2$Color <- "#C77Cff"  
-
-
-h2$log <- -log10(h2$`P-value`)
-c2$log <- -log10(c2$`P-value`)
-g2$log <- -log10(g2$`P-value`)
-o2$log <- -log10(o2$`P-value`)
-
-ggplot(data = h2, aes(x = h2$Trait, y = h2$log)) + coord_flip() + geom_bar(stat="identity", width=0.5) + theme_bw() + ylab("-log(p-value)") + xlab ("Human") + geom_hline(yintercept = -log10(0.05))
-ggplot(data = c2, aes(x = c2$Trait, y = c2$log)) + coord_flip() + geom_bar(stat="identity", width=0.5) + theme_bw() + ylab("-log(p-value)") + xlab("Chimp")+ geom_hline(yintercept = -log10(0.05))
-ggplot(data = g2, aes(x = g2$Trait, y = g2$log)) + coord_flip() + geom_bar(stat="identity", width=0.5) + theme_bw() + ylab("-log(p-value)") + xlab("Gorilla")+ geom_hline(yintercept = -log10(0.05))
-ggplot(data = o2, aes(x = o2$Trait, y = o2$log)) + coord_flip() + geom_bar(stat="identity", width=0.5) + theme_bw() + ylab("-log(p-value)") + xlab("Orangutan")+ geom_hline(yintercept = -log10(0.05))
-
-siglist <- rbind(h2[h2$`P-value`<0.05,], c2[c2$`P-value` <0.05,], g2[g2$`P-value`<0.05,], o2[o2$`P-value`<0.05,])
-
-
-  
-siglist <- transform(siglist, Trait = reorder(Trait, log))
-
-
-setwd(file.path(rootpath, "GWAS"))
-pdf("Gwas_enrichment.pdf")
-
-p <- ggplot(data = siglist, aes(x = siglist$Trait, y = siglist$log)) + 
-  coord_flip()+ 
-  geom_bar(stat="identity", width=0.5, aes(fill = as.factor(Species))) +
-  theme_bw() +
-  ylab("-log(p-value)") + 
-  xlab ("Trait") + 
-  geom_hline(yintercept = -log10(0.05)) +
-  scale_fill_manual(values=c("#F8766D",  "#7CAE00", "#00BFC4"), name = "Species")
-print(p)
-
-dev.off()
-#default colors in ggplot: 
-##F8766D = red = chimp
-##7CAE00=green = gorilla
-##00BFC4=teal = human
-##C77Cff=purple = orangutan
-
-table(gwas$MAPPED_TRAIT)
 
 
 
